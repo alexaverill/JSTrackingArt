@@ -16,6 +16,9 @@ var Vector2 = /** @class */ (function () {
         this.x = _x;
         this.y = _y;
     }
+    Vector2.prototype.toString = function () {
+        return "(" + this.x + "," + this.y + ")";
+    };
     return Vector2;
 }());
 var TimedVector = /** @class */ (function (_super) {
@@ -27,42 +30,48 @@ var TimedVector = /** @class */ (function (_super) {
     }
     return TimedVector;
 }(Vector2));
-function checkTTL(points) {
-    var temp = [];
-    points.forEach(function (point) {
-        if (point.startTime > Date.now() - timeToLive) {
-            temp.push(point);
-        }
-    });
-    return temp;
-}
-function addPosition(event) {
-    var pos = new TimedVector(event.x, event.y, Date.now());
-    points.push(pos);
-    console.log(points.length);
-}
-function drawLine(ctx, points) {
-    points = checkTTL(points);
-    ctx.clearRect(0, 0, 800, 800);
-    points = points.reverse();
-    ctx.beginPath();
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 8;
-    ctx.lineCap = "round";
-    if (points.length >= 1) {
-        ctx.moveTo(points[0].x, points[0].y);
-        for (var x = 1; x < points.length; x++) {
-            ctx.lineTo(points[x].x, points[x].y);
-        }
+var Render = /** @class */ (function () {
+    function Render(_canvas) {
+        this.mouse = new Vector2(10, 10);
+        this.trailPosition = new Vector2(10, 10);
+        this.trail = new Vector2(10, 10);
+        this.trailSpeed = 10;
+        this.pointHistory = [];
+        this.context = canvas.getContext('2d');
     }
-    ctx.stroke();
-    requestAnimationFrame(function () { return drawLine(ctx, points); });
-}
-var timeToLive = 20000;
-var points = [];
+    Render.prototype.setPosition = function (pos) {
+        this.pointHistory.push(this.mouse);
+        if (this.pointHistory.length > 5) {
+            this.pointHistory.pop();
+        }
+        this.mouse.x = pos.x;
+        this.mouse.y = pos.y;
+    };
+    Render.prototype.update = function () {
+        console.log(this.pointHistory.length);
+        // this.context.fillStyle = 'rgba(0,0,0,0.05)';
+        // this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+        this.context.beginPath();
+        this.context.fillStyle = 'rgba(0,0,1,.5)';
+        this.context.arc(this.mouse.x, this.mouse.y, 15, 0, Math.PI * 2);
+        this.context.closePath();
+        this.context.fill();
+        // console.log("Trail "+this.trailPosition.toString());
+        // console.log("Mouse "+this.mouse.toString());
+        // console.log("-----------------");
+        this.context.beginPath();
+        this.context.strokeStyle = 'yellow';
+        this.context.lineWidth = 20;
+        this.context.moveTo(this.pointHistory[this.pointHistory.length - 1].x, this.pointHistory[this.pointHistory.length - 1].y);
+        this.context.lineTo(this.mouse.x, this.mouse.y);
+        this.context.closePath();
+        this.context.fill();
+    };
+    return Render;
+}());
 var canvas = document.getElementById("display");
-canvas.addEventListener("mousemove", function (e) {
-    addPosition(e);
-}, false);
-var ctx = canvas.getContext("2d");
-requestAnimationFrame(function () { return drawLine(ctx, points); });
+var Rendering = new Render(canvas);
+canvas.addEventListener("mousemove", function (e) { return Rendering.setPosition(e); }, false);
+setInterval(function () { return Rendering.update(); }, 1000 / 60);
+// drawLine(ctx,points);
+//requestAnimationFrame(() => drawLine(ctx, points));
