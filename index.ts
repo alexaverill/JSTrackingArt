@@ -18,20 +18,40 @@ class TimedVector extends Vector2 {
 }
 class DrawEffect{
     position:Vector2 = new Vector2(0,0);
+    lastPos:Vector2 = new Vector2(0,0);
+    angle: number = 0;
     constructor(){
 
     }
+    setPosition(pos:Vector2){
+        this.lastPos.x = this.position.x;
+        this.lastPos.y = this.position.y;
+        this.position.x = pos.x;
+        this.position.y = pos.y;
+    }
+    // update(delta:number){
+    //     this.position.y += Math.sin(delta)*10;
+    // }
     draw(ctx:CanvasRenderingContext2D){
+        ctx.beginPath();
         ctx.fillStyle = "blue";
-        ctx.arc(this.position.x,this.position.y,10,0,Math.PI * 2);
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 20;
+        ctx.moveTo(this.lastPos.x,this.lastPos.y);
+        ctx.lineTo(this.position.x, this.position.y);
+        ctx.stroke();
+        ctx.arc(this.position.x,this.position.y,5,0,Math.PI * 2);
         ctx.fill();   
+        ctx.closePath();
     }
 }
 function handleMouse(mouse:MouseEvent){
-    lastMouse.x = mousePos.x;
-    lastMouse.y = mousePos.y;
-    mousePos.x = mouse.x;
-    mousePos.y = mouse.y;
+    let pos:Vector2 = new Vector2(mouse.x,mouse.y);
+    Drawing.setPosition(pos);
+    // lastMouse.x = mousePos.x;
+    // lastMouse.y = mousePos.y;
+    // mousePos.x = mouse.x;
+    // mousePos.y = mouse.y;
 
     // console.log(mousePos);
     // console.log(lastMouse);
@@ -54,14 +74,15 @@ function update(){
 //     context.arc(mousePos.x,mousePos.y,5,0,Math.PI * 2);
 //     context.fill();
 }
+let lastTime = Date.now();
+let deltaTime = Date.now();
 let Drawing:DrawEffect = new DrawEffect();
-Drawing.position = new Vector2(400,400);
 let mousePos:Vector2 = new Vector2(0,0);
 let lastMouse:Vector2 = new Vector2(0,0);
 let canvas = document.getElementById("display") as HTMLCanvasElement;   
 let context = canvas.getContext('2d');
 canvas.addEventListener("mousemove", (e)=>handleMouse(e), false);
 setInterval(update,1000/60);
-setInterval(clean,1000/30);
+setInterval(clean,1000/20);
 // drawLine(ctx,points);
 //requestAnimationFrame(() => drawLine(ctx, points));
