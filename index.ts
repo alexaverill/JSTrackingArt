@@ -16,6 +16,17 @@ class TimedVector extends Vector2 {
         this.startTime = _time;
     }
 }
+class DrawEffect{
+    position:Vector2 = new Vector2(0,0);
+    constructor(){
+
+    }
+    draw(ctx:CanvasRenderingContext2D){
+        ctx.fillStyle = "blue";
+        ctx.arc(this.position.x,this.position.y,10,0,Math.PI * 2);
+        ctx.fill();   
+    }
+}
 function handleMouse(mouse:MouseEvent){
     lastMouse.x = mousePos.x;
     lastMouse.y = mousePos.y;
@@ -32,17 +43,19 @@ function clean(){
     context.fillRect(0,0,context.canvas.width,context.canvas.height);
 }
 function update(){
-
-    context.beginPath();
-    context.fillStyle = 'rgba(255,0,0,1)';
-    context.strokeStyle = 'rgba(255,0,0,1)';
-    context.lineWidth = 10;
-   context.moveTo(lastMouse.x,lastMouse.y);
-    context.lineTo(mousePos.x,mousePos.y);
-    context.stroke();
-    context.arc(mousePos.x,mousePos.y,5,0,Math.PI * 2);
-    context.fill();
+        Drawing.draw(context);
+//     context.beginPath();
+//     context.fillStyle = 'rgba(255,0,0,1)';
+//     context.strokeStyle = 'rgba(255,0,0,1)';
+//     context.lineWidth = 10;
+//    context.moveTo(lastMouse.x,lastMouse.y);
+//     context.lineTo(mousePos.x,mousePos.y);
+//     context.stroke();
+//     context.arc(mousePos.x,mousePos.y,5,0,Math.PI * 2);
+//     context.fill();
 }
+let Drawing:DrawEffect = new DrawEffect();
+Drawing.position = new Vector2(400,400);
 let mousePos:Vector2 = new Vector2(0,0);
 let lastMouse:Vector2 = new Vector2(0,0);
 let canvas = document.getElementById("display") as HTMLCanvasElement;   
