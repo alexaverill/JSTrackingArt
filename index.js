@@ -30,48 +30,36 @@ var TimedVector = /** @class */ (function (_super) {
     }
     return TimedVector;
 }(Vector2));
-var Render = /** @class */ (function () {
-    function Render(_canvas) {
-        this.mouse = new Vector2(10, 10);
-        this.trailPosition = new Vector2(10, 10);
-        this.trail = new Vector2(10, 10);
-        this.trailSpeed = 10;
-        this.pointHistory = [];
-        this.context = canvas.getContext('2d');
-    }
-    Render.prototype.setPosition = function (pos) {
-        this.pointHistory.push(this.mouse);
-        if (this.pointHistory.length > 5) {
-            this.pointHistory.pop();
-        }
-        this.mouse.x = pos.x;
-        this.mouse.y = pos.y;
-    };
-    Render.prototype.update = function () {
-        console.log(this.pointHistory.length);
-        // this.context.fillStyle = 'rgba(0,0,0,0.05)';
-        // this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-        this.context.beginPath();
-        this.context.fillStyle = 'rgba(0,0,1,.5)';
-        this.context.arc(this.mouse.x, this.mouse.y, 15, 0, Math.PI * 2);
-        this.context.closePath();
-        this.context.fill();
-        // console.log("Trail "+this.trailPosition.toString());
-        // console.log("Mouse "+this.mouse.toString());
-        // console.log("-----------------");
-        this.context.beginPath();
-        this.context.strokeStyle = 'yellow';
-        this.context.lineWidth = 20;
-        this.context.moveTo(this.pointHistory[this.pointHistory.length - 1].x, this.pointHistory[this.pointHistory.length - 1].y);
-        this.context.lineTo(this.mouse.x, this.mouse.y);
-        this.context.closePath();
-        this.context.fill();
-    };
-    return Render;
-}());
+function handleMouse(mouse) {
+    lastMouse.x = mousePos.x;
+    lastMouse.y = mousePos.y;
+    mousePos.x = mouse.x;
+    mousePos.y = mouse.y;
+    // console.log(mousePos);
+    // console.log(lastMouse);
+    // console.log("---------------------");
+}
+function clean() {
+    context.fillStyle = 'rgba(0,0,0,.03)';
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+}
+function update() {
+    context.beginPath();
+    context.fillStyle = 'rgba(255,0,0,1)';
+    context.strokeStyle = 'rgba(255,0,0,1)';
+    context.lineWidth = 10;
+    context.moveTo(lastMouse.x, lastMouse.y);
+    context.lineTo(mousePos.x, mousePos.y);
+    context.stroke();
+    context.arc(mousePos.x, mousePos.y, 5, 0, Math.PI * 2);
+    context.fill();
+}
+var mousePos = new Vector2(0, 0);
+var lastMouse = new Vector2(0, 0);
 var canvas = document.getElementById("display");
-var Rendering = new Render(canvas);
-canvas.addEventListener("mousemove", function (e) { return Rendering.setPosition(e); }, false);
-setInterval(function () { return Rendering.update(); }, 1000 / 60);
+var context = canvas.getContext('2d');
+canvas.addEventListener("mousemove", function (e) { return handleMouse(e); }, false);
+setInterval(update, 1000 / 60);
+setInterval(clean, 1000 / 30);
 // drawLine(ctx,points);
 //requestAnimationFrame(() => drawLine(ctx, points));
