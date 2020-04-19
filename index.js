@@ -37,6 +37,7 @@ var DrawEffect = /** @class */ (function () {
         this.angle = 0;
     }
     DrawEffect.prototype.setPosition = function (pos) {
+        //console.log(pos.toString());
         this.lastPos.x = this.position.x;
         this.lastPos.y = this.position.y;
         this.position.x = pos.x;
@@ -46,6 +47,7 @@ var DrawEffect = /** @class */ (function () {
     //     this.position.y += Math.sin(delta)*10;
     // }
     DrawEffect.prototype.draw = function (ctx) {
+        //console.log("Draw Position: "+this.position.toString());
         ctx.beginPath();
         ctx.fillStyle = "blue";
         ctx.strokeStyle = "blue";
@@ -76,15 +78,6 @@ function clean() {
 }
 function update() {
     Drawing.draw(context);
-    //     context.beginPath();
-    //     context.fillStyle = 'rgba(255,0,0,1)';
-    //     context.strokeStyle = 'rgba(255,0,0,1)';
-    //     context.lineWidth = 10;
-    //    context.moveTo(lastMouse.x,lastMouse.y);
-    //     context.lineTo(mousePos.x,mousePos.y);
-    //     context.stroke();
-    //     context.arc(mousePos.x,mousePos.y,5,0,Math.PI * 2);
-    //     context.fill();
 }
 var lastTime = Date.now();
 var deltaTime = Date.now();
@@ -93,7 +86,12 @@ var mousePos = new Vector2(0, 0);
 var lastMouse = new Vector2(0, 0);
 var canvas = document.getElementById("display");
 var context = canvas.getContext('2d');
-canvas.addEventListener("mousemove", function (e) { return handleMouse(e); }, false);
+//canvas.addEventListener("mousemove", (e)=>handleMouse(e), false);
+function handleChange(x, y) {
+    //console.log(x+" "+y);
+    var pos = new Vector2(x, y);
+    Drawing.setPosition(pos);
+}
 setInterval(update, 1000 / 60);
 setInterval(clean, 1000 / 20);
 // drawLine(ctx,points);

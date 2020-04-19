@@ -1,9 +1,15 @@
 <html>
     <head>
         <title>Javascript Body Tracking</title>
+            <!-- Load TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <!-- Load Posenet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
     </head>
     <body>
+        <video id="video" width="800" height="800"></video>
         <canvas id="display" width="800" height="800" ></canvas>
     </body>
     <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="tracking.js"></script>
 </html>

@@ -24,6 +24,7 @@ class DrawEffect{
 
     }
     setPosition(pos:Vector2){
+        //console.log(pos.toString());
         this.lastPos.x = this.position.x;
         this.lastPos.y = this.position.y;
         this.position.x = pos.x;
@@ -33,6 +34,7 @@ class DrawEffect{
     //     this.position.y += Math.sin(delta)*10;
     // }
     draw(ctx:CanvasRenderingContext2D){
+        //console.log("Draw Position: "+this.position.toString());
         ctx.beginPath();
         ctx.fillStyle = "blue";
         ctx.strokeStyle = "blue";
@@ -64,15 +66,7 @@ function clean(){
 }
 function update(){
         Drawing.draw(context);
-//     context.beginPath();
-//     context.fillStyle = 'rgba(255,0,0,1)';
-//     context.strokeStyle = 'rgba(255,0,0,1)';
-//     context.lineWidth = 10;
-//    context.moveTo(lastMouse.x,lastMouse.y);
-//     context.lineTo(mousePos.x,mousePos.y);
-//     context.stroke();
-//     context.arc(mousePos.x,mousePos.y,5,0,Math.PI * 2);
-//     context.fill();
+
 }
 let lastTime = Date.now();
 let deltaTime = Date.now();
@@ -81,7 +75,12 @@ let mousePos:Vector2 = new Vector2(0,0);
 let lastMouse:Vector2 = new Vector2(0,0);
 let canvas = document.getElementById("display") as HTMLCanvasElement;   
 let context = canvas.getContext('2d');
-canvas.addEventListener("mousemove", (e)=>handleMouse(e), false);
+//canvas.addEventListener("mousemove", (e)=>handleMouse(e), false);
+function handleChange(x:number, y:number){
+    //console.log(x+" "+y);
+    let pos = new Vector2(x,y);
+    Drawing.setPosition(pos);
+}
 setInterval(update,1000/60);
 setInterval(clean,1000/20);
 // drawLine(ctx,points);
